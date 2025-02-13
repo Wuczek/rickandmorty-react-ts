@@ -3,15 +3,26 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../globals";
 import { ICharacter, IApiResponse } from "../types";
+import {
+  CardMeta,
+  CardHeader,
+  CardContent,
+  Card,
+  Icon,
+  Image,
+  Container,
+  Grid,
+  GridColumn,
+  Divider,
+} from "semantic-ui-react";
+import SelectFilterStatus from "./SelectFilterStatus";
+import PaginationComponent from "./PaginationComponent";
 
 const CharacterList = () => {
   const [characters, setCharacters] = useState<ICharacter[]>([]);
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const [pageInfo, setPageInfo] = useState<{
-    next: string | null;
-    prev: string | null;
-  }>({ next: null, prev: null });
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,10 +34,7 @@ const CharacterList = () => {
       .get<IApiResponse>(`${API_URL}?page=${page}&status=${statusFilter}`)
       .then((response) => {
         setCharacters(response.data.results);
-        setPageInfo({
-          next: response.data.info.next,
-          prev: response.data.info.prev,
-        });
+        setTotalPages(response.data.info.pages);
       })
       .catch((err) => {
         console.error("Error fetching data:", err);
@@ -39,50 +47,51 @@ const CharacterList = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <Container>
       <h1>Rick and Morty Characters</h1>
 
-      <div>
-        <label>Filter by Status: </label>
-        <select
-          onChange={(e) => setStatusFilter(e.target.value)}
-          value={statusFilter}
-        >
-          <option value="">All</option>
-          <option value="alive">Alive</option>
-          <option value="dead">Dead</option>
-          <option value="unknown">Unknown</option>
-        </select>
-      </div>
+      <SelectFilterStatus
+        onChange={(value) => setStatusFilter(value)}
+        value={statusFilter}
+      />
+      <Divider />
 
-      <div>
+      <Grid columns={4}>
         {characters.map((char) => (
-          <div key={char.id}>
+          <GridColumn>
             <Link to={`/character/${char.id}`}>
-              <img src={char.image} alt={char.name} />
-              <p>
-                {char.name} - {char.status} - {char.species} - {char.gender}
-              </p>
+              <Card key={char.id}>
+                <Image src={char.image} wrapped ui={false} />
+                <CardContent>
+                  <CardHeader>{char.name}</CardHeader>
+                  <CardMeta>
+                    <span>
+                      {char.species} / {char.gender}
+                    </span>
+                  </CardMeta>
+                </CardContent>
+                <CardContent extra>
+                  <a>
+                    <Icon name="heartbeat" />
+                    {char.status}
+                  </a>
+                </CardContent>
+              </Card>
             </Link>
-          </div>
+          </GridColumn>
         ))}
-      </div>
-
-      <div>
-        <button
-          disabled={!pageInfo.prev}
-          onClick={() => setPage((prev) => prev - 1)}
-        >
-          Previous
-        </button>
-        <button
-          disabled={!pageInfo.next}
-          onClick={() => setPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
-    </div>
+      </Grid>
+      <Divider />
+      
+      <Container textAlign="center">
+        
+      <PaginationComponent
+        totalPages={totalPages}
+        currentPage={page}
+        onPageChange={setPage}
+        />
+        </Container>
+    </Container>
   );
 };
 

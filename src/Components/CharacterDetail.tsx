@@ -14,8 +14,7 @@ const CharacterDetail = () => {
     setLoading(true);
     setError(null);
 
-    axios
-      .get<ICharacter>(`${API_URL}${id}`)
+    axios.get<ICharacter>(`${API_URL}${id}`)
       .then((response) => setCharacter(response.data))
       .catch((err) => {
         console.error("Error fetching character:", err);
@@ -36,6 +35,6 @@ const CharacterDetail = () => {
       <p>Gender: {character?.gender}</p>
     </div>
   );
-};
-
-export default CharacterDetail;
+  }
+  
+  export default CharacterDetail
