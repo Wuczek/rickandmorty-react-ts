@@ -15,8 +15,8 @@ import {
   GridColumn,
   Divider,
 } from "semantic-ui-react";
-import SelectFilterStatus from "./SelectFilterStatus";
-import PaginationComponent from "./PaginationComponent";
+import SelectFilterStatus from "../components/SelectFilterStatus";
+import PaginationComponent from "../components/PaginationComponent";
 
 const CharacterList = () => {
   const [characters, setCharacters] = useState<ICharacter[]>([]);

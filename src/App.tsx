@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import CharacterDetail from "./Components/CharacterDetail";
-import CharacterList from "./Components/CharacterList";
+import CharacterList from "./pages/CharacterList";
+import CharacterDetail from "./pages/CharacterDetail";
 import 'semantic-ui-css/semantic.min.css';
 
 function App() {
