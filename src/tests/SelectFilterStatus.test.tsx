@@ -6,9 +6,11 @@ describe("SelectFilterStatus", () => {
   test("renders filter dropdown", () => {
     render(<SelectFilterStatus value="" onChange={vi.fn()} />);
     
+
     expect(screen.getByText("All")).toBeInTheDocument();
     expect(screen.getByText("Alive")).toBeInTheDocument();
     expect(screen.getByText("Dead")).toBeInTheDocument();
+    expect(screen.getByText("Unknown")).toBeInTheDocument();
   });
 
   test("calls onChange when a filter is selected", () => {
